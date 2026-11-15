@@ -6,7 +6,8 @@
         {
             bool isProgramRunning = true;
             List<Room> rooms = new List<Room>();
-
+            List<Furniture> furnitureList = new List<Furniture>();
+            SeedData(furnitureList);
 
             while (isProgramRunning)
             {
@@ -20,30 +21,42 @@
 
                     if (!string.IsNullOrEmpty(roomName))
                     {
-                        Console.WriteLine("Enter room size (x1, x2, y1, y2, z1, z2) separated by commas");
-                        string sizeInput = Console.ReadLine();
-                        string[] sizeParts = sizeInput.Split(',');
+                        Console.WriteLine("Enter room size (x and y) separated by commas");
+                        bool isXSizeParseSuccessSize = int.TryParse(Console.ReadLine(), out int roomSizeX);
 
-                        if (sizeParts.Length == 6 &&
-                            int.TryParse(sizeParts[0], out int x1) &&
-                            int.TryParse(sizeParts[1], out int x2) &&
-                            int.TryParse(sizeParts[2], out int y1) &&
-                            int.TryParse(sizeParts[3], out int y2) &&
-                            int.TryParse(sizeParts[4], out int z1) &&
-                            int.TryParse(sizeParts[5], out int z2))
+                        if (isXSizeParseSuccessSize)
                         {
-                            SizeOfRoom sizeOfRoom = new SizeOfRoom(x1, x2, y1, y2, z1, z2);
-                            Room room = new Room(roomName, sizeOfRoom);
-                            Console.WriteLine($"Room '{room.Name}' created with size: ({x1}-{x2}x, {y1}-{y2}y, {z1}-{z2}z)");
+                            bool isYSizeParseSuccessSize = int.TryParse(Console.ReadLine(), out int roomSizeY);
+                            if (isYSizeParseSuccessSize)
+                            {
+                                SizeOfRoom sizeOfRoom = new SizeOfRoom(roomSizeX, roomSizeY);
+                                Room newRoom = new Room(roomName, sizeOfRoom);
+                                rooms.Add(newRoom);
+                                Console.WriteLine($"Room '{roomName}' created with size {roomSizeX}x{roomSizeY}.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid input for room size Y.");
+                            }
                         }
                         else
                         {
-                            Console.WriteLine("Invalid size input. Please enter 6 integers separated by commas.");
+                            Console.WriteLine("Invalid input for room size X.");
                         }
+
                     }
                     else
                     {
                         Console.WriteLine("Room name cannot be empty.");
+                    }
+                }
+                else if (userInput == 2)
+                {
+                    Console.WriteLine("Catalog of Furniture:");
+
+                    foreach (var furniture in furnitureList)
+                    {
+                        Console.WriteLine($"Name: {furniture.Name}, Size: {furniture.XSize}x{furniture.YSize}");
                     }
                 }
             }
@@ -52,15 +65,17 @@
         static void PrintInfo()
         {
             Console.WriteLine("Enter 1 to create new room");
+            Console.WriteLine("Enter 2 to see catalog of furniture");
+            Console.WriteLine("Enter 3 to place a furniture into the room");
         }
 
         static void SeedData (List<Furniture> furnitureList)
         {
-            furnitureList.Add(new Furniture("Chair", 1, 3, 2));
-            furnitureList.Add(new Furniture("Table", 3, 5, 1, 2, 1, 2));
-            furnitureList.Add(new Furniture("Sofa", 6, 8, 1, 3, 1, 2));
-            furnitureList.Add(new Furniture("Bed", 9, 12, 1, 4, 1, 2));
-            furnitureList.Add(new Furniture("Closet", 4, 3, 3, 3, 1, 2));
-        })
+            furnitureList.Add(new Furniture("Chair", 50, 1, 5));
+            furnitureList.Add(new Furniture("Table", 150, 3, 5));
+            furnitureList.Add(new Furniture("Sofa", 500, 6, 3));
+            furnitureList.Add(new Furniture("Bed", 575, 9, 3));
+            furnitureList.Add(new Furniture("Closet", 350, 4, 3));
+        }
     }
 }
