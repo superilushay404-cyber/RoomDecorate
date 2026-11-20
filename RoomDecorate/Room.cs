@@ -10,5 +10,7 @@
 
         public string Name { get; set; }
         public SizeOfRoom SizeOfRoom { get; set; }
+
+        public List<Furniture> Furnitures { get; set; } = new List<Furniture>();
     }
 }

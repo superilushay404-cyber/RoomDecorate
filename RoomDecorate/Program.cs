@@ -1,4 +1,6 @@
-﻿namespace RoomDecorate
+﻿using System.ComponentModel.Design;
+
+namespace RoomDecorate
 {
     internal class Program
     {
@@ -21,12 +23,14 @@
 
                     if (!string.IsNullOrEmpty(roomName))
                     {
-                        Console.WriteLine("Enter room size (x and y) separated by commas");
+                        Console.WriteLine("Enter room size x");
                         bool isXSizeParseSuccessSize = int.TryParse(Console.ReadLine(), out int roomSizeX);
 
                         if (isXSizeParseSuccessSize)
                         {
+                            Console.WriteLine("Enter room size y");
                             bool isYSizeParseSuccessSize = int.TryParse(Console.ReadLine(), out int roomSizeY);
+
                             if (isYSizeParseSuccessSize)
                             {
                                 SizeOfRoom sizeOfRoom = new SizeOfRoom(roomSizeX, roomSizeY);
@@ -59,6 +63,62 @@
                         Console.WriteLine($"Name: {furniture.Name}, Size: {furniture.XSize}x{furniture.YSize}");
                     }
                 }
+                else if (userInput == 3)
+                {
+                    if (rooms.Count > 0)
+                    {
+                        Console.WriteLine("Enter name of furniture");
+                        string nameOfFurniture = Console.ReadLine();
+                        Furniture findedFurniture = GetFurnitureByName(furnitureList, nameOfFurniture);
+                        Furniture dublicate = GetFurnitureByName(rooms[0].Furnitures, nameOfFurniture);
+
+                        if (findedFurniture != null && dublicate == null)
+                        {
+                            Console.WriteLine("Enter x");
+                            bool isXParseSuccess = int.TryParse(Console.ReadLine(), out int x);
+
+                            if (isXParseSuccess == true && x <= rooms[0].SizeOfRoom.X && x > 0)
+                            {
+                                Console.WriteLine("Enter y");
+                                bool isYParseSuccess = int.TryParse(Console.ReadLine(), out int y);
+
+                                if (isYParseSuccess == true && y <= rooms[0].SizeOfRoom.Y && y > 0)
+                                {
+                                    Furniture roomWithSamePosision = GetFurnitureByXOrY(rooms[0].Furnitures, x, y);
+
+                                    if (roomWithSamePosision != null)
+                                    {
+                                        Console.WriteLine("This place is taken. Try to change it");
+                                    }
+                                    else
+                                    {
+                                        Furniture newFurniture = findedFurniture;
+                                        rooms[0].Furnitures.Add(newFurniture);
+                                        newFurniture.XPosition = x;
+                                        newFurniture.YPosition = y;
+                                        Console.WriteLine("Success");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Wrong input of y (or other furniture is already placed there)");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Wrong input of x (or other furniture is already placed there)");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Furniture not found or already placed in the room.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No rooms available. Please create a room first.");
+                    }
+                }
             }
         }
 
@@ -69,13 +129,37 @@
             Console.WriteLine("Enter 3 to place a furniture into the room");
         }
 
-        static void SeedData (List<Furniture> furnitureList)
+        static void SeedData(List<Furniture> furnitureList)
         {
             furnitureList.Add(new Furniture("Chair", 50, 1, 5));
             furnitureList.Add(new Furniture("Table", 150, 3, 5));
             furnitureList.Add(new Furniture("Sofa", 500, 6, 3));
             furnitureList.Add(new Furniture("Bed", 575, 9, 3));
             furnitureList.Add(new Furniture("Closet", 350, 4, 3));
+        }
+
+        static Furniture GetFurnitureByName(List<Furniture> furnitureList, string nameOfFurniture)
+        {
+            foreach (var furniture in furnitureList)
+            {
+                if (furniture.Name == nameOfFurniture)
+                {
+                    return furniture;
+                }
+            }
+            return null;
+        }
+
+        static Furniture GetFurnitureByXOrY(List<Furniture> furnitures, int x, int y)
+        {
+            foreach (var furniture in furnitures)
+            {
+                if (furniture.XPosition == x || furniture.YPosition == y)
+                {
+                    return furniture;
+                }
+            }
+            return null;
         }
     }
 }
