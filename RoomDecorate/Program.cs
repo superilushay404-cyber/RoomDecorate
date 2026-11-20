@@ -60,7 +60,7 @@ namespace RoomDecorate
 
                     foreach (var furniture in furnitureList)
                     {
-                        Console.WriteLine($"Name: {furniture.Name}, Size: {furniture.XSize}x{furniture.YSize}");
+                        Console.WriteLine($"Name: {furniture.Name}, Size: {furniture.XSize}x{furniture.YSize} Price: {furniture.Price}");
                     }
                 }
                 else if (userInput == 3)
@@ -119,6 +119,90 @@ namespace RoomDecorate
                         Console.WriteLine("No rooms available. Please create a room first.");
                     }
                 }
+                else if (userInput == 4)
+                {
+                    if (rooms.Count > 0)
+                    {
+                        Console.WriteLine("Enter name of furniture to rotate");
+                        string nameOfFurniture = Console.ReadLine();
+                        Furniture findedFurniture = GetFurnitureByName(rooms[0].Furnitures, nameOfFurniture);
+
+                        if (findedFurniture != null)
+                        {
+                            if (findedFurniture.Degree != 360)
+                            {
+                                findedFurniture.Degree = findedFurniture.Degree + 90;
+                            }
+                            else
+                            {
+                                findedFurniture.Degree = 0;
+                            }
+
+                            Console.WriteLine($"Success! Current degree is {findedFurniture.Degree}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Furniture not found in the room.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No rooms available. Please create a room first.");
+                    }
+                }
+                else if (userInput == 5)
+                {
+                    if (rooms.Count > 0)
+                    {
+                        Console.WriteLine("Enter name of furniture");
+                        string nameOfFurniture = Console.ReadLine();
+                        Furniture findedFurniture = GetFurnitureByName(rooms[0].Furnitures, nameOfFurniture);
+
+                        if (findedFurniture != null )
+                        {
+                            Console.WriteLine("Enter new x");
+                            bool isXParseSuccess = int.TryParse(Console.ReadLine(), out int x);
+
+                            if (isXParseSuccess == true)
+                            {
+                                Console.WriteLine("Enter new y");
+                                bool isYParseSuccess = int.TryParse(Console.ReadLine(), out int y);
+
+                                if (isYParseSuccess == true)
+                                {
+                                    Furniture furnitureWithSamePosition = GetFurnitureByXOrY(rooms[0].Furnitures, x, y);
+
+                                    if (furnitureWithSamePosition == null )
+                                    {
+                                        findedFurniture.XPosition = x;
+                                        findedFurniture.YPosition = y;
+                                        Console.WriteLine("Success");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("This place is not avaivable");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Input is not int");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Input is not int");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("This furniture is not placed in this room");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No rooms available. Please create a room first.");
+                    }
+                }
             }
         }
 
@@ -127,15 +211,17 @@ namespace RoomDecorate
             Console.WriteLine("Enter 1 to create new room");
             Console.WriteLine("Enter 2 to see catalog of furniture");
             Console.WriteLine("Enter 3 to place a furniture into the room");
+            Console.WriteLine("Enter 4 to rotate furniture by 90 degrees");
+            Console.WriteLine("Enter 5 to move furniture");
         }
 
         static void SeedData(List<Furniture> furnitureList)
         {
-            furnitureList.Add(new Furniture("Chair", 50, 1, 5));
-            furnitureList.Add(new Furniture("Table", 150, 3, 5));
-            furnitureList.Add(new Furniture("Sofa", 500, 6, 3));
-            furnitureList.Add(new Furniture("Bed", 575, 9, 3));
-            furnitureList.Add(new Furniture("Closet", 350, 4, 3));
+            furnitureList.Add(new Furniture("Chair", 50, 1, 5, "red"));
+            furnitureList.Add(new Furniture("Table", 150, 3, 5, "blue"));
+            furnitureList.Add(new Furniture("Sofa", 500, 6, 3, "brown"));
+            furnitureList.Add(new Furniture("Bed", 575, 9, 3, "white"));
+            furnitureList.Add(new Furniture("Closet", 350, 4, 3, "pink"));
         }
 
         static Furniture GetFurnitureByName(List<Furniture> furnitureList, string nameOfFurniture)
