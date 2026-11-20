@@ -203,6 +203,22 @@ namespace RoomDecorate
                         Console.WriteLine("No rooms available. Please create a room first.");
                     }
                 }
+                else if (userInput == 6)
+                {
+                    Console.WriteLine("Enter name of furniture");
+                    string nameOfFurnitureToRemove = Console.ReadLine();
+                    Furniture furnitureToRemove = GetFurnitureByName(rooms[0].Furnitures, nameOfFurnitureToRemove);
+
+                    if (furnitureToRemove != null )
+                    {
+                        rooms[0].Furnitures.Remove(furnitureToRemove);
+                        Console.WriteLine("Success");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Couldnt find furniture");
+                    }
+                }
             }
         }
 
@@ -213,6 +229,7 @@ namespace RoomDecorate
             Console.WriteLine("Enter 3 to place a furniture into the room");
             Console.WriteLine("Enter 4 to rotate furniture by 90 degrees");
             Console.WriteLine("Enter 5 to move furniture");
+            Console.WriteLine("Enter 6 to remove furniture from room");
         }
 
         static void SeedData(List<Furniture> furnitureList)
