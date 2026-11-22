@@ -25,5 +25,7 @@
         public int YPosition { get; set; }
 
         public int Degree { get; set; } = 0;
+
+        public XAndYPosiotions XAndYPosiotions { get; set; }
     }
 }
